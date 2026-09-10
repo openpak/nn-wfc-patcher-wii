@@ -1,0 +1,38 @@
+name: release
+
+# Tag openpak-v1.2.3: builds the Wii launcher, the per-game stage-0 gecko codes, stage 1 and
+# the signed stage-2 payloads for openpak.org, and attaches them to a GitHub Release. The
+# payload signing key comes from the WFC_PAYLOAD_PRIVATE_KEY secret (its public half is
+# compiled into stage 1 from include/wwfcPayloadPublicKey.hpp).
+on:
+  push:
+    tags: ['openpak-v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: devkitpro/devkitppc:latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip3 install --break-system-packages cryptography 2>/dev/null || pip3 install cryptography
+      - run: printf '%s' "$KEY" > misc/private-key-OUT.pem
+        env:
+          KEY: ${{ secrets.WFC_PAYLOAD_PRIVATE_KEY }}
+      - run: ./make.sh --all -- -j$(nproc) -DPROD
+      - run: (cd launcher && make -j$(nproc))
+      - run: |
+          mkdir -p out && tar czf out/wfc-payload-openpak.tar.gz -C dist . && cp launcher/launcher.dol out/openpak-wfc-launcher.dol
+          (cd patch/build && zip -q ../../out/openpak-wfc-gecko-codes.zip *.txt)
+          ls -la out
+      - uses: actions/upload-artifact@v4
+        with:
+          name: openpak-wfc-patcher
+          path: out/*
+      - if: startsWith(github.ref, 'refs/tags/openpak-v')
+        run: apt-get update -qq && apt-get install -y -qq gh >/dev/null 2>&1 || true; gh release create "${GITHUB_REF_NAME}" out/* --repo "${GITHUB_REPOSITORY}" --title "${GITHUB_REF_NAME}" --generate-notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

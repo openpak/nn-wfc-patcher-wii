@@ -51,3 +51,8 @@ launcher/build
 *.dol
 *.wad
 *.app
+
+# never commit signing keys or generated key headers
+*.pem
+misc/wwfcPayloadPublicKey-OUT.hpp
+dist/
