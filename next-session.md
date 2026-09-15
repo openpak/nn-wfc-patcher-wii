@@ -1,0 +1,40 @@
+# Next session — nn-wfc-patcher-wii
+
+Updated 2026-09-15.
+
+The Wii's client side: WiiLink's `wfc-patcher-wii` rebuilt for openpak.org
+(same-length swap for `nintendowifi.net`, so every patched string still
+fits). Launcher, gecko codes and RSA-signed payloads, released on
+`openpak-v*`; never run on hardware.
+
+## Where things stand
+
+- HEAD = `openpak-v0.1.1` (2026-09-10); 15 tags; nothing unreleased.
+- Artifacts per release:
+  - `openpak-wfc-launcher.dol` — the setup-file launcher (counterpart of
+    the Switch's `openpak.nro`); boots a disc with stage 0 applied
+  - `openpak-wfc-gecko-codes.zip` — per-game stage-0 codes for USB loaders
+    and Riivolution
+  - `wfc-payload-openpak.tar.gz` — stage 1 + stage 2; unpack into
+    nn-wfc's `payload/`. Stage 2 is RSA-signed: public half committed in
+    `include/wwfcPayloadPublicKey.hpp`, private half in the repo secret
+    (`WFC_PAYLOAD_PRIVATE_KEY`). The first OpenPak commit (2026-09-10)
+    leaked that key; rotated within the minute — PRD §5.
+- The Wii still resolves `*.openpak.org` through DNS: point it at
+  ../nn-sssl-dns or publish records.
+- Untracked (2026-09-15 docs pass): `CHANGELOG.md`, `docs/`, `prds/` stubs.
+
+## Next steps
+
+1. Verify the release payloads are unpacked into the deployed nn-wfc's
+   `payload/` directory.
+2. Hardware pass: launcher or gecko code on a real Wii, one game through
+   NAS — C10 observed, not inferred.
+3. Key discipline: the signing key is a single point of failure for every
+   Wii client; no second copy anywhere.
+
+## Pointers
+
+- README (OpenPak header), make.sh, patch/ stage1/ payload/ READMEs
+- ../prds/platform-wii-ds-prd.md §5 risks; ../nn-wfc (server),
+  ../nn-sssl-dns (DNS)
