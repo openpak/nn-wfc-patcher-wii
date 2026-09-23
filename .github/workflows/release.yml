@@ -1,12 +1,12 @@
 name: release
 
-# Tag openpak-v1.2.3: builds the Wii launcher, the per-game stage-0 gecko codes, stage 1 and
+# Tag v1.2.3: builds the Wii launcher, the per-game stage-0 gecko codes, stage 1 and
 # the signed stage-2 payloads for openpak.org, and attaches them to a GitHub Release. The
 # payload signing key comes from the WFC_PAYLOAD_PRIVATE_KEY secret (its public half is
 # compiled into stage 1 from include/wwfcPayloadPublicKey.hpp).
 on:
   push:
-    tags: ['openpak-v*']
+    tags: ['v*.*.*']
   workflow_dispatch:
 
 permissions:
@@ -33,7 +33,7 @@ jobs:
           name: openpak-wfc-patcher
           path: out/*
           retention-days: 3
-      - if: startsWith(github.ref, 'refs/tags/openpak-v')
+      - if: startsWith(github.ref, 'refs/tags/v')
         run: (type gh >/dev/null 2>&1 || (mkdir -p /usr/share/keyrings && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg -o /usr/share/keyrings/githubcli-archive-keyring.gpg && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" > /etc/apt/sources.list.d/github-cli.list && apt-get update -qq && apt-get install -y -qq gh >/dev/null)); gh release create "${GITHUB_REF_NAME}" out/* --repo "${GITHUB_REPOSITORY}" --title "${GITHUB_REF_NAME}" --generate-notes
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
