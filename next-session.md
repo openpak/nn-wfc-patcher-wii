@@ -26,7 +26,7 @@ Current status 2026-09-24: latest OpenPak tag still `openpak-v0.1.1`
     (`WFC_PAYLOAD_PRIVATE_KEY`). The first OpenPak commit (2026-09-10)
     leaked that key; rotated within the minute — PRD §5.
 - The Wii still resolves `*.openpak.org` through DNS: point it at
-  ../nn-sssl-dns or publish records.
+  ../../../wiiu-3ds/infra/nn-sssl-dns or publish records.
 - 2026-09-15 docs pass committed: `CHANGELOG.md`, `docs/`, `prds/` stubs.
 
 ## Next steps
@@ -41,8 +41,8 @@ Current status 2026-09-24: latest OpenPak tag still `openpak-v0.1.1`
 ## Pointers
 
 - README (OpenPak header), make.sh, patch/ stage1/ payload/ READMEs
-- ../prds/platform-wii-ds-prd.md §5 risks; ../nn-wfc (server),
-  ../nn-sssl-dns (DNS)
+- ../../../../prds/platform-wii-ds-prd.md §5 risks; ../../infra/nn-wfc (server),
+  ../../../wiiu-3ds/infra/nn-sssl-dns (DNS)
 
 ## Scratch (research and throwaway work)
 
