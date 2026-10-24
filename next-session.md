@@ -1,4 +1,4 @@
-# Next session — nn-wfc-patcher-wii
+# Next session — OpenPak Wii Patcher
 
 Updated 2026-09-24.
 
